@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "querysphere"
+version = "0.1.0"
+description = "Backend for QuerySphere App"
+authors = ["Joern Petersen"]
+readme = "README.md"
+packages = [{include = "querysphere"}]
+
+[tool.poetry.dependencies]
+python = "^3.11,<3.12"
+langchain = "^0.0.351"
+sqlalchemy = "^2.0.23"
+pydantic-settings = "^2.1.0"
+sentence-transformers = "^2.2.2"
+psycopg2-binary = "^2.9.9"
+pgvector = "^0.2.4"
+beautifulsoup4 = "^4.12.2"
+lxml = "^4.9.4"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.3"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.8"
+
+
+[tool.poetry.scripts]
+start = "app.main:start"
+migrate_db = "app.main:migrate_db"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

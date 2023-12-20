@@ -1,0 +1,13 @@
+PYTHONPATH=/path/to/QuerySphere/backend
+parser__chunk_size=4000
+parser__chunk_overlap=200
+embed__model_name=BAAI/bge-small-en
+llm__context_window=3800
+llm__num_output=256
+llm__temperature=0.1
+pgvector__driver=psycopg2
+pgvector__host=localhost
+pgvector__port=5432
+pgvector__database=app_db
+pgvector__user=user
+pgvector__password=password
