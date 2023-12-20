@@ -4,14 +4,18 @@ import os
 
 from bs4 import BeautifulSoup, SoupStrainer
 from core.config import get_api_settings
-from core.constants import DB_COLLECTION_NAME
+from core.constants import DB_COLLECTION_NAME, SQL_RECORD_MANAGAR_NAMESPACE
+from core.embedding import get_embeddings_model
 from core.indexing import index
 from core.parser import langchain_docs_extractor
 from langchain.document_loaders import SitemapLoader
-from langchain.embeddings import HuggingFaceBgeEmbeddings
-from langchain.indexes import SQLRecordManager
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores.pgvector import PGVector
+from langchain_core.documents import Document
+
+from core.storage import get_pgvector_connection_str, get_sql_record_manager
+
+FORCE_UPDATE = (os.environ.get("FORCE_UPDATE") or "false").lower() == "true"
 
 logging.basicConfig(
     filename="ingest.log",
@@ -19,28 +23,6 @@ logging.basicConfig(
     level=logging.DEBUG,
 )
 logger = logging.getLogger(__name__)
-
-
-settings = get_api_settings()
-
-
-CONNECTION_STRING = PGVector.connection_string_from_db_params(
-    driver=settings.pgvector.driver,
-    host=settings.pgvector.host,
-    port=settings.pgvector.port,
-    database=settings.pgvector.database,
-    user=settings.pgvector.user,
-    password=settings.pgvector.password,
-)
-
-
-def get_embeddings_model(model_name: str):
-    return HuggingFaceBgeEmbeddings(
-        model_name=model_name,
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True},
-    )
-
 
 def metadata_extractor(meta: dict, soup: BeautifulSoup) -> dict:
     title = soup.find("title")
@@ -54,8 +36,7 @@ def metadata_extractor(meta: dict, soup: BeautifulSoup) -> dict:
         **meta,
     }
 
-
-def load_langchain_docs():
+def load_langchain_docs() -> list[Document]:
     return SitemapLoader(
         "https://python.langchain.com/sitemap.xml",
         filter_urls=["https://python.langchain.com/"],
@@ -69,34 +50,37 @@ def load_langchain_docs():
         meta_function=metadata_extractor,
     ).load()
 
+def split_docs(docs: list[Document], chunk_size: int, chunk_overlap: int) -> list[Document]:
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    return text_splitter.split_documents(docs)
 
-def ingest_docs():
+def add_missing_metadata(docs: list[Document]) -> None:                                                               
+    for doc in docs:                                                                                                        
+        if "source" not in doc["metadata"]:                                                                                 
+            doc["metadata"]["source"] = ""                                                                                  
+        if "title" not in doc["metadata"]:                                                                                  
+            doc["metadata"]["title"] = ""  
+
+def ingest_docs() -> None:
+    settings = get_api_settings()
+    logger.info("Loaded settings from environment variables")
+
     docs_from_documentation = load_langchain_docs()
     logger.info(f"Loaded {len(docs_from_documentation)} docs from documentation")
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=4000, chunk_overlap=200)
-    docs_transformed = text_splitter.split_documents(docs_from_documentation)
+    docs_transformed = split_docs(docs_from_documentation, settings.parser.chunk_size, settings.parser.chunk_overlap)
+    add_missing_metadata(docs_transformed)
 
-    # We try to return 'source' and 'title' metadata when querying vector store and
-    # Weaviate will error at query time if one of the attributes is missing from a
-    # retrieved document.
-    for doc in docs_transformed:
-        if "source" not in doc.metadata:
-            doc.metadata["source"] = ""
-        if "title" not in doc.metadata:
-            doc.metadata["title"] = ""
-
+    pg_connection_str = get_pgvector_connection_str(settings.pgvector)
     embedding = get_embeddings_model(settings.embed.name)
     vectorstore = PGVector(
         collection_name=DB_COLLECTION_NAME,
-        connection_string=CONNECTION_STRING,
+        connection_string=pg_connection_str,
         embedding_function=embedding,
         logger=logger,
     )
 
-    record_manager = SQLRecordManager(
-        f"pgvector/{DB_COLLECTION_NAME}", db_url=CONNECTION_STRING
-    )
+    record_manager = get_sql_record_manager(settings, SQL_RECORD_MANAGAR_NAMESPACE)
     record_manager.create_schema()
 
     indexing_stats = index(
@@ -105,7 +89,7 @@ def ingest_docs():
         vectorstore,
         cleanup="full",
         source_id_key="source",
-        force_update=(os.environ.get("FORCE_UPDATE") or "false").lower() == "true",
+        force_update=FORCE_UPDATE,
     )
 
     logger.info(f"Indexing stats: {indexing_stats}")
