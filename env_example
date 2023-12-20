@@ -1,4 +1,4 @@
-PYTHONPATH=/path/to/QuerySphere/backend
+PYTHONPATH=/path/to/QuerySphere/backend:/path/to/QuerySphere/backend/core
 parser__chunk_size=4000
 parser__chunk_overlap=200
 embed__model_name=BAAI/bge-small-en
