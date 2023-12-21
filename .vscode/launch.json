@@ -11,5 +11,18 @@
             "program": "${workspaceFolder}/backend/scripts/ingest.py",
             "console": "integratedTerminal",
         },
+        {
+            "name": "app/main.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/app/main.py",
+            "args": [
+                "main:app",
+                "--reload",
+                "--port",
+                "8000"
+            ],
+            "console": "integratedTerminal",
+        },
     ]
 }

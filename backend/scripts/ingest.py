@@ -8,12 +8,11 @@ from core.constants import DB_COLLECTION_NAME, SQL_RECORD_MANAGAR_NAMESPACE
 from core.embedding import get_embeddings_model
 from core.indexing import index
 from core.parser import langchain_docs_extractor
+from core.storage import get_pgvector_connection_str, get_sql_record_manager
 from langchain.document_loaders import SitemapLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores.pgvector import PGVector
 from langchain_core.documents import Document
-
-from core.storage import get_pgvector_connection_str, get_sql_record_manager
 
 FORCE_UPDATE = (os.environ.get("FORCE_UPDATE") or "false").lower() == "true"
 
@@ -23,6 +22,7 @@ logging.basicConfig(
     level=logging.DEBUG,
 )
 logger = logging.getLogger(__name__)
+
 
 def metadata_extractor(meta: dict, soup: BeautifulSoup) -> dict:
     title = soup.find("title")
@@ -35,6 +35,7 @@ def metadata_extractor(meta: dict, soup: BeautifulSoup) -> dict:
         "language": html.get("lang", "") if html else "",
         **meta,
     }
+
 
 def load_langchain_docs() -> list[Document]:
     return SitemapLoader(
@@ -50,16 +51,23 @@ def load_langchain_docs() -> list[Document]:
         meta_function=metadata_extractor,
     ).load()
 
-def split_docs(docs: list[Document], chunk_size: int, chunk_overlap: int) -> list[Document]:
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+
+def split_docs(
+    docs: list[Document], chunk_size: int, chunk_overlap: int
+) -> list[Document]:
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size, chunk_overlap=chunk_overlap
+    )
     return text_splitter.split_documents(docs)
 
-def add_missing_metadata(docs: list[Document]) -> None:                                                               
-    for doc in docs:                                                                                                        
-        if "source" not in doc["metadata"]:                                                                                 
-            doc["metadata"]["source"] = ""                                                                                  
-        if "title" not in doc["metadata"]:                                                                                  
-            doc["metadata"]["title"] = ""  
+
+def add_missing_metadata(docs: list[Document]) -> None:
+    for doc in docs:
+        if "source" not in doc["metadata"]:
+            doc["metadata"]["source"] = ""
+        if "title" not in doc["metadata"]:
+            doc["metadata"]["title"] = ""
+
 
 def ingest_docs() -> None:
     settings = get_api_settings()
@@ -68,7 +76,11 @@ def ingest_docs() -> None:
     docs_from_documentation = load_langchain_docs()
     logger.info(f"Loaded {len(docs_from_documentation)} docs from documentation")
 
-    docs_transformed = split_docs(docs_from_documentation, settings.parser.chunk_size, settings.parser.chunk_overlap)
+    docs_transformed = split_docs(
+        docs_from_documentation,
+        settings.parser.chunk_size,
+        settings.parser.chunk_overlap,
+    )
     add_missing_metadata(docs_transformed)
 
     pg_connection_str = get_pgvector_connection_str(settings.pgvector)
@@ -93,6 +105,12 @@ def ingest_docs() -> None:
     )
 
     logger.info(f"Indexing stats: {indexing_stats}")
+
+    # maybe to make SQL calls to check if data is in the DB.
+    # import psycopg2.connect
+    # connection = connect(
+    #     dbname="mydb", user="myuser", password="mypassword"
+    # )
 
 
 if __name__ == "__main__":
