@@ -3015,17 +3015,6 @@ langchainhub@~0.0.6:
   resolved "https://registry.yarnpkg.com/langchainhub/-/langchainhub-0.0.6.tgz#9d2d06e4ce0807b4e8a31e19611f57aef990b54d"
   integrity sha512-SW6105T+YP1cTe0yMf//7kyshCgvCTyFBMTgH2H3s9rTAR4e+78DA/BBrUL/Mt4Q5eMWui7iGuAYb3pgGsdQ9w==
 
-langsmith@^0.0.41:
-  version "0.0.41"
-  resolved "https://registry.yarnpkg.com/langsmith/-/langsmith-0.0.41.tgz#3cf5dc0b320748d8dfa65bcbec4a776d745b0003"
-  integrity sha512-QRJMrCg8IzQJmva+30SbbQznaX91R/5IIfNj0yy0EFhNzgEmJP+XYnTiS0Ph5Htv6Kb4mYhxP7x198ECupW98A==
-  dependencies:
-    "@types/uuid" "^9.0.1"
-    commander "^10.0.1"
-    p-queue "^6.6.2"
-    p-retry "4"
-    uuid "^9.0.0"
-
 langsmith@~0.0.31:
   version "0.0.52"
   resolved "https://registry.yarnpkg.com/langsmith/-/langsmith-0.0.52.tgz#157e180eb028467e3178dfe5cf43a7b7ae6a937b"

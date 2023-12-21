@@ -22,7 +22,6 @@ from langchain.schema.runnable import (
     RunnableMap,
 )
 from langchain.vectorstores.pgvector import PGVector
-from langsmith import Client
 from pydantic.v1 import BaseModel
 
 RESPONSE_TEMPLATE = """\
@@ -74,8 +73,6 @@ logging.basicConfig(
     level=logging.DEBUG,
 )
 logger = logging.getLogger(__name__)
-
-client = Client()
 
 app = FastAPI()
 app.add_middleware(
