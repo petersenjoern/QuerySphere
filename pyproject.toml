@@ -16,17 +16,16 @@ psycopg2-binary = "^2.9.9"
 pgvector = "^0.2.4"
 beautifulsoup4 = "^4.12.2"
 lxml = "^4.9.4"
+fastapi = "^0.105.0"
+langserve = {extras = ["all"], version = "^0.0.37"}
+uvicorn = "^0.25.0"
+litellm = "^1.15.2"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.8"
-
-
-[tool.poetry.scripts]
-start = "app.main:start"
-migrate_db = "app.main:migrate_db"
 
 [build-system]
 requires = ["poetry-core"]
