@@ -23,6 +23,8 @@ litellm = "^1.15.2"
 gitpython = "^3.1.40"
 arxiv = "^2.1.0"
 pymupdf = "^1.23.8"
+sqlmodel = "^0.0.14"
+asyncpg = "^0.29.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
