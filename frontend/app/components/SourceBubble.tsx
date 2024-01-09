@@ -19,6 +19,9 @@ export function SourceBubble({
 }) {
   return (
     <Card
+      onClick={async () => {
+        window.open(source.url, "_blank");
+      }}
       backgroundColor={highlighted ? "rgb(58, 58, 61)" : "rgb(78,78,81)"}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}

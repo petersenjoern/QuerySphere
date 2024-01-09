@@ -1,6 +1,7 @@
 # Repo related data
 /data
 /volume
+
 *.log
 
 # Byte-compiled / optimized / DLL files
