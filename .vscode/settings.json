@@ -8,5 +8,39 @@
             "source.organizeImports": "explicit"
         },
         "editor.defaultFormatter": "charliermarsh.ruff"
-    }
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "runOnSave.statusMessageTimeout": 200,
+    "runOnSave.commands": [
+        {
+            "match": ".*\\_Refactor.tsx$",
+            "command": "cd ~/repos/llm && . venv/bin/activate && cat ${file} | llm -t refactor -o temperature 0.3 -p language 'typescript' -p packages 'react; chakra-ui/react; tailwindcss; next.js' > ${fileDirname}/${fileBasenameNoExtension}-$(date +'%Y-%m-%d-%H-%M-%S').tsx",
+            "runIn": "backend",
+            "runningStatusMessage": "Refactoring ${fileBasename}",
+            "finishStatusMessage": "Refactoring ${fileBasename} completed in .md file"
+        },
+        {
+            "match": ".*\\_Code.tsx$",
+            "command": "cd ~/repos/llm && . venv/bin/activate && cat ${file} | llm -t code -o temperature 0.3 -p language 'typescript' -p packages 'react; chakra-ui/react; tailwindcss; next.js' > ${fileDirname}/${fileBasenameNoExtension}-$(date +'%Y-%m-%d-%H-%M-%S').tsx",
+            "runIn": "backend",
+            "runningStatusMessage": "Refactoring ${fileBasename}",
+            "finishStatusMessage": "Refactoring ${fileBasename} completed in .md file"
+        },
+        {
+            "match": ".*\\_Edit.tsx$",
+            "command": "cd ~/repos/llm && . venv/bin/activate && cat ${file} | llm -t edit -o temperature 0.3 -p language 'typescript' -p packages 'react; chakra-ui/react; tailwindcss; next.js' > ${fileDirname}/${fileBasenameNoExtension}-$(date +'%Y-%m-%d-%H-%M-%S').tsx",
+            "runIn": "backend",
+            "runningStatusMessage": "Refactoring ${fileBasename}",
+            "finishStatusMessage": "Refactoring ${fileBasename} completed in .md file"
+        },
+        {
+            "match": ".*\\_Fix.tsx$",
+            "command": "cd ~/repos/llm && . venv/bin/activate && cat ${file} | llm -t fix -o temperature 0.3 -p language 'typescript' -p packages 'react; chakra-ui/react; tailwindcss; next.js' > ${fileDirname}/${fileBasenameNoExtension}-$(date +'%Y-%m-%d-%H-%M-%S').tsx",
+            "runIn": "backend",
+            "runningStatusMessage": "Refactoring ${fileBasename}",
+            "finishStatusMessage": "Refactoring ${fileBasename} completed in .md file"
+        }
+    ]
 }

@@ -3,7 +3,7 @@ import { Card, CardBody, Heading } from "@chakra-ui/react";
 
 export type Source = {
   url: string;
-  title: string;
+  title: string;    
 };
 
 export function SourceBubble({
@@ -22,7 +22,7 @@ export function SourceBubble({
       onClick={async () => {
         window.open(source.url, "_blank");
       }}
-      backgroundColor={highlighted ? "rgb(58, 58, 61)" : "rgb(78,78,81)"}
+      backgroundColor={highlighted ? "rgb(255, 255, 255)" : "rgb(229, 229, 229)"}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       cursor={"pointer"}
@@ -31,7 +31,7 @@ export function SourceBubble({
       overflow={"hidden"}
     >
       <CardBody>
-        <Heading size={"sm"} fontWeight={"normal"} color={"white"}>
+        <Heading size={"sm"} fontWeight={"normal"} color={"rgb(20, 33, 61)"}>
           {source.title}
         </Heading>
       </CardBody>

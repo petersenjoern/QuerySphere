@@ -9,6 +9,7 @@ import { marked } from "marked";
 import { Renderer } from "marked";
 import hljs from "highlight.js";
 import "highlight.js/styles/gradient-dark.css";
+import MyTable from "./MyTable";
 
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { applyPatch } from "fast-json-patch";
@@ -23,7 +24,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { ArrowUpIcon } from "@chakra-ui/icons";
-import { Source } from "./SourceBubble";
+import { Source } from "./SourceBubble_Refactor";
 import { apiBaseUrl } from "../utils/constants";
 
 export function ChatWindow(props: {
@@ -181,14 +182,12 @@ export function ChatWindow(props: {
   };
 
   return (
+    // <div className="flex flex-col items-center p-8 rounded grow max-h-full">
     <div className="flex flex-col items-center p-8 rounded grow max-h-full">
       {messages.length > 0 && (
         <Flex direction={"column"} alignItems={"center"} paddingBottom={"20px"}>
-          <Heading fontSize="2xl" fontWeight={"medium"} mb={1} color={"white"}>
+          <Heading fontSize="2xl" fontWeight={"medium"} mb={1} color={"red"}>
             {titleText}
-          </Heading>
-          <Heading fontSize="md" fontWeight={"normal"} mb={1} color={"white"}>
-            We appreciate feedback!
           </Heading>
         </Flex>
       )}
@@ -203,7 +202,6 @@ export function ChatWindow(props: {
               <ChatMessageBubble
                 key={m.id}
                 message={{ ...m }}
-                aiEmoji="🦜"
                 isMostRecent={index === 0}
                 messageCompleted={!isLoading}
               ></ChatMessageBubble>
@@ -217,9 +215,9 @@ export function ChatWindow(props: {
           value={input}
           maxRows={5}
           marginRight={"56px"}
-          placeholder="What is LangChain Expression Language?"
-          textColor={"white"}
-          borderColor={"rgb(58, 58, 61)"}
+          placeholder="How can I help you today?"
+          textColor={"rgb(39, 38, 53)"}
+          borderColor={"rgb(206, 206, 206)"}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -245,21 +243,6 @@ export function ChatWindow(props: {
           />
         </InputRightElement>
       </InputGroup>
-
-      {messages.length === 0 ? (
-        <footer className="flex justify-center absolute bottom-8">
-          <a
-            href="https://github.com/langchain-ai/chat-langchain"
-            target="_blank"
-            className="text-white flex items-center"
-          >
-            <img src="/images/github-mark.svg" className="h-4 mr-1" />
-            <span>View Source</span>
-          </a>
-        </footer>
-      ) : (
-        ""
-      )}
     </div>
   );
 }

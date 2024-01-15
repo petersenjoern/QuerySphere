@@ -1,6 +1,6 @@
 import "react-toastify/dist/ReactToastify.css";
 import { useState, useRef } from "react";
-import { SourceBubble, Source } from "./SourceBubble";
+import { SourceBubble, Source } from "./SourceBubble_Refactor";
 import {
   VStack,
   Flex,
@@ -105,7 +105,6 @@ const createAnswerElements = (
 
 export function ChatMessageBubble(props: {
   message: Message;
-  aiEmoji?: string;
   isMostRecent: boolean;
   messageCompleted: boolean;
 }) {
@@ -149,7 +148,7 @@ export function ChatMessageBubble(props: {
                 fontSize="lg"
                 fontWeight={"medium"}
                 mb={1}
-                color={"blue.300"}
+                color={"rgb(252, 163, 17)"}
                 paddingBottom={"10px"}
               >
                 Sources
@@ -177,18 +176,18 @@ export function ChatMessageBubble(props: {
             </VStack>
           </Flex>
 
-          <Heading size="lg" fontWeight="medium" color="blue.300">
+          <Heading size="lg" fontWeight="medium" color="rgb(252, 163, 17)">
             Answer
           </Heading>
         </>
       )}
 
       {isUser ? (
-        <Heading size="lg" fontWeight="medium" color="white">
+        <Heading size="lg" fontWeight="medium" color="rgb(20, 33, 61)">
           {content}
         </Heading>
       ) : (
-        <Box className="whitespace-pre-wrap" color="white">
+        <Box className="whitespace-pre-wrap" color="rgb(20, 33, 61)">
           {answerElements}
         </Box>
       )}
