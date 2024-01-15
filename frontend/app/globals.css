@@ -3,17 +3,13 @@
 @tailwind utilities;
 
 body {
-  color: #f8f8f8;
-  background: #131318;
+  color: rgb(254, 197, 187);
+  background: rgb(232, 232, 228);
 }
 
 body input,
 body textarea {
-  color: black;
-}
-
-a {
-  color: #2d7bd4;
+  color: rgb(216, 226, 220);
 }
 
 a:hover {
@@ -21,13 +17,13 @@ a:hover {
 }
 
 p {
-  margin: 8px 0;
+  margin: 5px 0;
 }
 
 code {
-  color: #ffa500;
+  color: rgb(254, 200, 154);
 }
 
 li {
-  padding: 4px;
+  padding: 3px;
 }

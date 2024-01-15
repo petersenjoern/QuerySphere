@@ -1,4 +1,4 @@
-import { Source } from "./SourceBubble";
+import { Source } from "./SourceBubble_Refactor";
 
 export function InlineCitation(props: {
   source: Source;

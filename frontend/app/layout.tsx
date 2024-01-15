@@ -5,8 +5,8 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Chat LangChain",
-  description: "Chatbot for LangChain",
+  title: "QuerySphere",
+  description: "Chat with your own documents",
 };
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className={`${inter.className} h-full`}>
         <div
           className="flex flex-col h-full md:p-8"
-          style={{ background: "rgb(38, 38, 41)" }}
+          style={{ background: "rgb(236, 228, 219)" }}
         >
           {children}
         </div>
